@@ -31,14 +31,16 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pizzapartycompose.ui.PizzaPartyComposeScreen
 import com.example.pizzapartycompose.ui.theme.PizzaPartyComposeTheme
 import kotlin.math.ceil
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
-            PizzaPartyComposeTheme {
+            PizzaPartyComposeTheme(dynamicColor = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -51,133 +53,133 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Composable
-fun PizzaPartyComposeScreen(modifier: Modifier = Modifier) {
-    //these variables remember user's input
-    var totalPizzas by remember { mutableIntStateOf(0) }
-    var numPeopleInput by remember { mutableStateOf("") }
-    var hungerLevel by remember { mutableStateOf("Medium") }
-
-    Column(
-        modifier = modifier.padding(10.dp)
-    ) {
-        Text(
-            text = "Pizza Party",
-            fontSize = 38.sp,
-            modifier = modifier.padding(bottom = 16.dp)
-        )
-        NumberField (
-            labelText = "Number of people?",
-
-            //this what allows us to get user's input from the textfield
-            textInput = numPeopleInput,
-            onValueChange = { numPeopleInput = it },
-
-            modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
-        )
-        RadioGroup(
-            labelText = "How hungry?",
-            radioOptions = listOf("Light", "Medium", "Ravenous"),
-
-            //this what allows us to get user's choice from the radio groups
-            selectedOption = hungerLevel,
-            onSelected = { hungerLevel = it },
-
-            modifier = modifier
-        )
-        Text(
-            text = "Total pizzas: $totalPizzas",
-            fontSize = 22.sp,
-            modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
-        )
-        Button(
-            onClick = {
-                totalPizzas = calculateNumPizzas(numPeopleInput.toIntOrNull() ?: 0, hungerLevel)
-            },
-            modifier = modifier.fillMaxWidth()
-        ) {
-            Text("Calculate")
-        }
-    }
-}
-
-@Composable
-fun NumberField(
-    labelText: String,
-    textInput: String,
-    onValueChange: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-
-    //TextField creation
-    TextField(
-        value = textInput,
-        onValueChange = onValueChange,
-        label = { Text(labelText) },
-        singleLine = true,
-        keyboardOptions = KeyboardOptions (
-            keyboardType = KeyboardType.Number
-        ),
-        modifier = modifier
-    )
-}
-
-
-@Composable
-fun RadioGroup(
-    labelText: String,
-    radioOptions: List<String>,
-    selectedOption: String,
-    onSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    val isSelectedOption: (String) -> Boolean = { selectedOption == it}
-
-    //RadioGroup creation
-    Column {
-        Text(labelText)
-
-        //this creates a row of buttons with for each
-        radioOptions.forEach { option ->
-            Row(
-                modifier = modifier
-                    .selectable(
-                        selected = isSelectedOption(option),
-                        onClick = { onSelected(option)},
-                        role = Role.RadioButton
-                    )
-                    .padding(8.dp)
-            ) {
-                RadioButton(
-                    selected = isSelectedOption(option),
-                    onClick = null,
-                    modifier = modifier.padding(end = 8.dp)
-                )
-                Text(
-                    text = option,
-                    modifier = modifier.fillMaxWidth()
-                )
-            }
-        }
-    }
-}
-
-
-fun calculateNumPizzas(numPeople: Int, hungerLevel: String): Int {
-    val slicesPerPizza = 8
-    val slicesPerPerson = when (hungerLevel) {
-        "Light" -> 2
-        "Medium" -> 3
-        else -> 4
-    }
-
-    return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PizzaPartyComposeScreen()
-
-}
+//@Composable
+//private fun PizzaPartyComposeScreen(modifier: Modifier = Modifier) {
+//    //these variables remember user's input
+//    var totalPizzas by remember { mutableIntStateOf(0) }
+//    var numPeopleInput by remember { mutableStateOf("") }
+//    var hungerLevel by remember { mutableStateOf("Medium") }
+//
+//    Column(
+//        modifier = modifier.padding(10.dp)
+//    ) {
+//        Text(
+//            text = "Pizza Party",
+//            fontSize = 38.sp,
+//            modifier = modifier.padding(bottom = 16.dp)
+//        )
+//        NumberField (
+//            labelText = "Number of people?",
+//
+//            //this what allows us to get user's input from the textfield
+//            textInput = numPeopleInput,
+//            onValueChange = { numPeopleInput = it },
+//
+//            modifier = modifier.padding(bottom = 16.dp).fillMaxWidth()
+//        )
+//        RadioGroup(
+//            labelText = "How hungry?",
+//            radioOptions = listOf("Light", "Medium", "Ravenous"),
+//
+//            //this what allows us to get user's choice from the radio groups
+//            selectedOption = hungerLevel,
+//            onSelected = { hungerLevel = it },
+//
+//            modifier = modifier
+//        )
+//        Text(
+//            text = "Total pizzas: $totalPizzas",
+//            fontSize = 22.sp,
+//            modifier = modifier.padding(top = 16.dp, bottom = 16.dp)
+//        )
+//        Button(
+//            onClick = {
+//                totalPizzas = calculateNumPizzas(numPeopleInput.toIntOrNull() ?: 0, hungerLevel)
+//            },
+//            modifier = modifier.fillMaxWidth()
+//        ) {
+//            Text("Calculate")
+//        }
+//    }
+//}
+//
+//@Composable
+//fun NumberField(
+//    labelText: String,
+//    textInput: String,
+//    onValueChange: (String) -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//
+//    //TextField creation
+//    TextField(
+//        value = textInput,
+//        onValueChange = onValueChange,
+//        label = { Text(labelText) },
+//        singleLine = true,
+//        keyboardOptions = KeyboardOptions (
+//            keyboardType = KeyboardType.Number
+//        ),
+//        modifier = modifier
+//    )
+//}
+//
+//
+//@Composable
+//fun RadioGroup(
+//    labelText: String,
+//    radioOptions: List<String>,
+//    selectedOption: String,
+//    onSelected: (String) -> Unit,
+//    modifier: Modifier = Modifier
+//) {
+//    val isSelectedOption: (String) -> Boolean = { selectedOption == it}
+//
+//    //RadioGroup creation
+//    Column {
+//        Text(labelText)
+//
+//        //this creates a row of buttons with for each
+//        radioOptions.forEach { option ->
+//            Row(
+//                modifier = modifier
+//                    .selectable(
+//                        selected = isSelectedOption(option),
+//                        onClick = { onSelected(option)},
+//                        role = Role.RadioButton
+//                    )
+//                    .padding(8.dp)
+//            ) {
+//                RadioButton(
+//                    selected = isSelectedOption(option),
+//                    onClick = null,
+//                    modifier = modifier.padding(end = 8.dp)
+//                )
+//                Text(
+//                    text = option,
+//                    modifier = modifier.fillMaxWidth()
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//
+//fun calculateNumPizzas(numPeople: Int, hungerLevel: String): Int {
+//    val slicesPerPizza = 8
+//    val slicesPerPerson = when (hungerLevel) {
+//        "Light" -> 2
+//        "Medium" -> 3
+//        else -> 4
+//    }
+//
+//    return ceil(numPeople * slicesPerPerson / slicesPerPizza.toDouble()).toInt()
+//}
+//
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    PizzaPartyComposeScreen()
+//
+//}
